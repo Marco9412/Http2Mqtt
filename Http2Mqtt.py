@@ -7,7 +7,7 @@ import fileinput
 
 app = Flask(__name__)
 
-conn = None
+global conn
 VALID_USERS = dict()
 VALID_TOPICS = set()
 MASTER_TOPICS = dict()
@@ -95,8 +95,7 @@ if __name__ == '__main__':
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     context.load_cert_chain(settings["http"]["certfilepath"], settings["http"]["keyfilepath"])
 
-    global conn
-    conn = mqttlib.MqttConnection(settings)
+    conn = mqttlib.MqttConnection(settings["mqtt"])
 
     conn.connect()
     app.run(ssl_context=context, port=settings["http"]["port"], host='0.0.0.0')
