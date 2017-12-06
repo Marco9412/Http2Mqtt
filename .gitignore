@@ -1,0 +1,13 @@
+.idea/
+__pycache__/
+http2mqttlog.txt
+resources/settings_my.json
+resources/mqtt_client/ca.crt
+resources/mqtt_client/client.key
+resources/mqtt_client/client.crt
+resources/http_server/ca.crt
+resources/http_server/ca.key
+resources/http_server/ca.srl
+resources/http_server/server.crt
+resources/http_server/server.csr
+resources/http_server/server.key
