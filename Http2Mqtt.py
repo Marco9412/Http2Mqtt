@@ -59,9 +59,9 @@ def publish(topic):
     elif request.method == 'POST' and 'payload' in request.form:
         payload = request.form['payload']
 
-    if topic is MASTER_TOPICS:
+    if topic in MASTER_TOPICS:
         for sub_topic in MASTER_TOPICS[topic]:
-            conn.publish(sub_topic)
+            conn.publish(sub_topic, payload)
         return "Ok"
     else:
         return "Ok" if conn.publish(topic, payload) else "Err"
