@@ -87,6 +87,7 @@ if __name__ == '__main__':
             VALID_TOPICS.add(topic)
         for master_topic in settings["mqtt"]["master_topics"]:
             MASTER_TOPICS[master_topic] = settings["mqtt"]["master_topics"][master_topic]
+            VALID_TOPICS.add(master_topic)
     except json.decoder.JSONDecodeError as e:
         print('Invalid json file! Please check your settings!')
         print(e)
