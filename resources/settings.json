@@ -15,14 +15,17 @@
     "valid_topics" : [
         "fsdff/dwg/dsfs",
         "afd/ef",
-        "caa/caa
+        "caa/caa"
     ],
     "master_topics" : {
       "fsdff/dwg/dsfs": [
         "afd/ef",
         "caa/caa"
       ]
-    }
+    },
+    "subscribed_topics" : [
+
+    ]
   },
 
   "http" : {

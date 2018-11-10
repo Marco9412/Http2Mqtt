@@ -12,8 +12,13 @@ VALID_USERS = dict()
 VALID_TOPICS = set()
 MASTER_TOPICS = dict()
 
+SUBSCRIBED_TOPICS = dict()
 
-# This app can only PUBLISH!
+
+def mqtt_message_callback(msg_topic, msg_payload):
+    if msg_topic in SUBSCRIBED_TOPICS:
+        SUBSCRIBED_TOPICS[msg_topic] = msg_payload
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 def check_auth(username, password):
@@ -44,6 +49,16 @@ def requires_auth(f):
 @app.route('/')
 def hello_world():
     return 'Hello World!'
+
+
+@app.route('/get/<path:topic>')
+@requires_auth
+def read_topic(topic):
+    if topic not in SUBSCRIBED_TOPICS:
+        app.logger.warn('Tried to read a non-subscribed topic %s' % topic)
+        return "Err"
+
+    return SUBSCRIBED_TOPICS.get(topic).decode('utf-8') if SUBSCRIBED_TOPICS.get(topic) else "Err"
 
 
 @app.route('/<path:topic>')
@@ -88,6 +103,8 @@ if __name__ == '__main__':
         for master_topic in settings["mqtt"]["master_topics"]:
             MASTER_TOPICS[master_topic] = settings["mqtt"]["master_topics"][master_topic]
             VALID_TOPICS.add(master_topic)
+        for subscribed_topic in settings["mqtt"]["subscribed_topics"]:
+            SUBSCRIBED_TOPICS[subscribed_topic] = b''
     except json.decoder.JSONDecodeError as e:
         print('Invalid json file! Please check your settings!')
         print(e)
@@ -96,7 +113,7 @@ if __name__ == '__main__':
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     context.load_cert_chain(settings["http"]["certfilepath"], settings["http"]["keyfilepath"])
 
-    conn = mqttlib.MqttConnection(settings["mqtt"])
+    conn = mqttlib.MqttConnection(settings["mqtt"], mqtt_message_callback)
 
     conn.connect()
     app.run(ssl_context=context, port=settings["http"]["port"], host='0.0.0.0')

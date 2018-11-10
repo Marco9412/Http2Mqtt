@@ -11,6 +11,7 @@ class MqttConnection(object):
         self._ip = settings["brokeraddress"]
         self._port = settings["brokerport"]
         self._connected = False
+        self._subscribed_topics = settings["subscribed_topics"]
         self._callback = callback
         self._mqttc = mqtt.Client()
         self._mqttc.on_connect = self._onconnect
@@ -29,6 +30,9 @@ class MqttConnection(object):
     def _onconnect(self, mqttc, userdata, flags, rc):
         self._connected = True
         logging.debug('MqttConnection.onConnected()')
+
+        for t in self._subscribed_topics:
+            self.subscribe(t)
 
     def _ondisconnect(self, mqttc, userdata, rc):
         self._connected = False
