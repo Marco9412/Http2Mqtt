@@ -1,7 +1,7 @@
 from flask import Flask, request, Response
 from functools import wraps
 import ssl
-import mqttlib
+from flaskr import mqttlib
 import json.decoder
 import fileinput
 
@@ -35,7 +35,7 @@ def requires_auth(f):
             if check_auth(request.form['username'], request.form['password']):
                 return f(*args, **kwargs)
         elif request.method == 'GET':
-            if check_auth(request.args.get('username',''), request.args.get('password','')):
+            if check_auth(request.args.get('username', ''), request.args.get('password', '')):
                 return f(*args, **kwargs)
         return Response(
             'Could not verify your access level for that URL.\n'
@@ -82,7 +82,7 @@ def publish(topic):
         return "Ok" if conn.publish(topic, payload) else "Err"
 
 
-if __name__ == '__main__':
+def run_app():
     # parse input
     data = str()
     for line in fileinput.input():
@@ -119,3 +119,6 @@ if __name__ == '__main__':
     app.run(ssl_context=context, port=settings["http"]["port"], host='0.0.0.0')
     conn.disconnect()
 
+
+if __name__ == '__main__':
+    run_app()
