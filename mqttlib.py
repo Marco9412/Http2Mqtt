@@ -38,7 +38,7 @@ class MqttConnection(object):
         self._connected = False
         if rc != 0:
             logging.debug('MqttConnection.onDisconnected() -> error! Reconnecting...')
-            self.connect()
+            # self.connect()  # Done automatically!
 
     def _onmessage(self, mqttc, obj, msg):
         logging.debug('MqttConnection.onMessage() %s %s' % (str(msg.topic), str(msg.payload)))

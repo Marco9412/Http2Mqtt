@@ -30,6 +30,7 @@
 
   "http" : {
     "port" : 8886,
+    "ssl" : true,
     "certfilepath" : "./resources/http_server/server.crt",
     "keyfilepath" : "./resources/http_server/server.key",
     "valid_users" : {

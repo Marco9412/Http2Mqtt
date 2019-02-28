@@ -110,8 +110,11 @@ if __name__ == '__main__':
         print(e)
         exit(1)
 
-    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-    context.load_cert_chain(settings["http"]["certfilepath"], settings["http"]["keyfilepath"])
+    if settings["http"]["ssl"] == "true":
+        context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+        context.load_cert_chain(settings["http"]["certfilepath"], settings["http"]["keyfilepath"])
+    else:
+        context = None
 
     conn = mqttlib.MqttConnection(settings["mqtt"], mqtt_message_callback)
 
