@@ -1,6 +1,7 @@
 from flask import Flask, request, Response
 from functools import wraps
 import ssl
+import time
 import mqttlib
 import json.decoder
 import fileinput
@@ -77,6 +78,7 @@ def publish(topic):
     if topic in MASTER_TOPICS:
         for sub_topic in MASTER_TOPICS[topic]:
             conn.publish(sub_topic, payload)
+            time.sleep(1)
         return "Ok"
     else:
         return "Ok" if conn.publish(topic, payload) else "Err"
