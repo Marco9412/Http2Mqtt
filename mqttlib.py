@@ -22,8 +22,11 @@ class MqttConnection(object):
             self._mqttc.username_pw_set(settings["brokerusername"], settings["brokerpassword"])
 
         if settings["brokerssl"]:
-            self._mqttc.tls_set(ca_certs=settings["cafilepath"], certfile=settings["certfilepath"],
-                                keyfile=settings["keyfilepath"], cert_reqs=ssl.CERT_NONE)
+            self._mqttc.tls_set(ca_certs=settings["cafilepath"] if settings["cafilepath"] != "" else None,
+                                certfile=settings["certfilepath"] if settings["certfilepath"] != "" else None,
+                                keyfile=settings["keyfilepath"] if settings["keyfilepath"] != "" else None,
+                                cert_reqs=ssl.CERT_OPTIONAL if (settings["cafilepath"] != "" or settings["certfilepath"]
+                                                                != "") else ssl.CERT_NONE)
             self._mqttc.tls_insecure_set(True)
         logging.debug('MQTTClient initialized')
 
